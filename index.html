@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BL Reader — tracking my obsessions</title>
+<link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+ 
+<div id="particles"></div>
+ 
+<!-- ── AUTH VIEW ── -->
+<div id="authView" class="view active">
+  <div class="auth-container">
+    <div class="auth-art">
+      <div class="auth-art-deco"></div>
+      <div class="auth-art-bg">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="80" r="60" stroke="#500808" stroke-width="0.5"/>
+          <circle cx="100" cy="80" r="40" stroke="#500808" stroke-width="0.5"/>
+          <path d="M40 160 Q100 100 160 160" stroke="#500808" stroke-width="0.8"/>
+          <path d="M60 170 Q100 120 140 170" stroke="#300505" stroke-width="0.5"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand">
+        <div class="auth-art-logo">BL <span>READER</span></div>
+        <div class="auth-art-sub">tracking my obsessions 🦋</div>
+      </div>
+      <div class="auth-art-quote" style="margin-top:20px">
+        In a world full of love stories,<br>I choose the ones that break me.
+      </div>
+    </div>
+    <div class="auth-form-panel">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchAuthTab('login')">Iniciar Sesión</button>
+        <button class="auth-tab" onclick="switchAuthTab('register')">Registrarse</button>
+      </div>
+ 
+      <div id="loginPanel">
+        <div class="auth-title">Bienvenida <em>de vuelta</em></div>
+        <div class="auth-subtitle">Continúa con tus lecturas favoritas</div>
+        <div id="loginError" class="auth-error"></div>
+        <div class="field">
+          <label>Correo</label>
+          <input type="email" id="loginEmail" placeholder="tu@correo.com">
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button class="btn-primary" onclick="doLogin()">ENTRAR</button>
+        <div class="divider-ornament">✦ ✦ ✦</div>
+        <p style="font-size:12px;color:var(--text3);text-align:center">¿No tienes cuenta? <span style="color:var(--red3);cursor:pointer" onclick="switchAuthTab('register')">Regístrate aquí</span></p>
+      </div>
+ 
+      <div id="registerPanel" style="display:none">
+        <div class="auth-title">Crea tu <em>refugio</em></div>
+        <div class="auth-subtitle">Únete y lleva el control de tus manhwas</div>
+        <div id="registerError" class="auth-error"></div>
+        <div class="field">
+          <label>Nombre de usuario</label>
+          <input type="text" id="regName" placeholder="vampire, moonchild...">
+        </div>
+        <div class="field">
+          <label>Correo electrónico</label>
+          <input type="email" id="regEmail" placeholder="tu@correo.com">
+        </div>
+        <div class="field">
+          <label>Contraseña</label>
+          <input type="password" id="regPass" placeholder="••••••••">
+        </div>
+        <div class="field">
+          <label>Confirmar contraseña</label>
+          <input type="password" id="regPass2" placeholder="••••••••" onkeydown="if(event.key==='Enter')doRegister()">
+        </div>
+        <button class="btn-primary" onclick="doRegister()">CREAR CUENTA</button>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+<!-- ── APP VIEW ── -->
+<div id="appView" class="view">
+  <nav class="sidebar">
+    <div class="sidebar-art">
+      <div class="sidebar-art-bg">
+        <svg viewBox="0 0 200 200" fill="none">
+          <circle cx="100" cy="80" r="65" stroke="#500808" stroke-width="0.5"/>
+          <circle cx="100" cy="80" r="45" stroke="#400606" stroke-width="0.5"/>
+          <path d="M100 20 L100 160 M35 90 L165 90" stroke="#300404" stroke-width="0.5"/>
+          <circle cx="100" cy="80" r="12" fill="#1a0303"/>
+        </svg>
+      </div>
+      <div class="sidebar-brand">
+        <div class="sidebar-brand-name">BL <span>READER</span></div>
+        <div class="sidebar-brand-tag">tracking my obsessions <span class="butterfly">🦋</span></div>
+      </div>
+    </div>
+    <div class="sidebar-divider"></div>
+ 
+    <div class="nav-item active" onclick="showPage('mylist')" id="nav-mylist">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Mi lista
+    </div>
+    <div class="nav-item" onclick="showPage('wantread')" id="nav-wantread">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6.5a6 6 0 0 1 0 12M12 6.5a6 6 0 0 0 0 12M12 3v3M12 18v3M4.93 4.93l2.12 2.12M16.95 16.95l2.12 2.12M3 12h3M18 12h3"/></svg>
+      Quiero leer
+    </div>
+    <div class="nav-item" onclick="showPage('completed')" id="nav-completed">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 13l4 4L19 7"/></svg>
+      Completados
+    </div>
+    <div class="nav-item" onclick="showPage('reminders')" id="nav-reminders">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 17H20L18.595 15.595A1 1 0 0 1 18.25 14.97V11A6 6 0 0 0 7 11V14.97A1 1 0 0 1 6.405 15.595L5 17H10M15 17V18A3 3 0 0 1 9 18V17M15 17H9"/></svg>
+      Recordatorios
+    </div>
+    <div class="nav-item" onclick="showPage('stats')" id="nav-stats">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3v18h18M7 16l4-4 4 4 5-5"/></svg>
+      Stats
+    </div>
+    <div class="nav-item" id="nav-admin" onclick="showPage('admin')" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.622 10.395l-1.097-2.65L20 6l-2-2-1.735 1.483-2.707-1.113L13 2h-2l-.558 2.37-2.707 1.113L6 4 4 6l1.475 1.745-1.097 2.65L2 11v2l2.378.555 1.097 2.695L4 18l2 2 1.735-1.483 2.707 1.113L11 22h2l.558-2.37 2.707-1.113L18 20l2-2-1.475-1.745 1.097-2.695L22 13v-2l-2.378-.605Z"/></svg>
+      Admin
+    </div>
+ 
+    <div class="sidebar-quote">
+      <p>"In a world full of love stories, I choose the ones that break me."</p>
+      <div class="ornament">— ✦ —</div>
+    </div>
+  </nav>
+ 
+  <main class="main" id="mainContent">
+    <!-- Pages rendered here -->
+  </main>
+</div>
+ 
+<!-- ── MODALS ── -->
+<!-- Add/Edit Manhwa -->
+<div class="modal-overlay" id="manhwaModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="manhwaModalTitle">Agregar Manhwa</div>
+      <button class="modal-close" onclick="closeModal('manhwaModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="editId">
+      <div class="modal-field">
+        <label>Título *</label>
+        <input type="text" id="mTitle" placeholder="Ej: Killing Stalking">
+      </div>
+      <div class="modal-field">
+        <label>Autor</label>
+        <input type="text" id="mAuthor" placeholder="Ej: Koogi">
+      </div>
+      <div class="modal-row">
+        <div class="modal-field">
+          <label>Capítulo inicio</label>
+          <input type="number" id="mCapStart" placeholder="1" min="1">
+        </div>
+        <div class="modal-field">
+          <label>Capítulo fin / total</label>
+          <input type="number" id="mCapEnd" placeholder="67" min="1">
+        </div>
+      </div>
+      <div class="modal-field">
+        <label>Capítulo actual</label>
+        <input type="number" id="mCapCurrent" placeholder="¿En qué capítulo vas?">
+      </div>
+      <div class="modal-field">
+        <label>Estado</label>
+        <select id="mStatus">
+          <option value="reading">Leyendo</option>
+          <option value="read">Leído</option>
+          <option value="pending">Pendiente</option>
+          <option value="completed">Completado</option>
+        </select>
+      </div>
+      <div class="modal-field">
+        <label>URL de portada (imagen)</label>
+        <input type="url" id="mCover" placeholder="https://...">
+      </div>
+      <div class="modal-field">
+        <label>Notas / Reseña</label>
+        <textarea id="mNotes" placeholder="¿Qué te parece? Spoilers, favoritos..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('manhwaModal')">Cancelar</button>
+      <button class="btn-primary" style="width:auto;padding:10px 24px" onclick="saveManhwa()">Guardar</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Add Reminder -->
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Agregar Recordatorio</div>
+      <button class="modal-close" onclick="closeModal('reminderModal')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <label>Manhwa</label>
+        <input type="text" id="rManhwa" placeholder="¿Para qué manhwa?">
+      </div>
+      <div class="modal-field">
+        <label>Mensaje del recordatorio</label>
+        <input type="text" id="rMsg" placeholder="Ej: Revisar nuevos capítulos">
+      </div>
+      <div class="modal-field">
+        <label>Fecha y hora</label>
+        <input type="datetime-local" id="rDate">
+      </div>
+      <div class="modal-field">
+        <label>Nota adicional</label>
+        <textarea id="rNote" placeholder="Capítulo donde quedé, notas..." style="min-height:60px"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal('reminderModal')">Cancelar</button>
+      <button class="btn-primary" style="width:auto;padding:10px 24px" onclick="saveReminder()">Guardar</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+<script src="java.js"></script>
+</body>
